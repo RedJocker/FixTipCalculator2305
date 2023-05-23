@@ -1,0 +1,10 @@
+type: edu
+files:
+- name: src/test/java/org/hyperskill/calculator/tip/internals/AbstractUnitTest.kt
+  visible: false
+- name: src/test/java/org/hyperskill/calculator/tip/internals/TipCalculatorUnitTest.kt
+  visible: false
+- name: src/test/java/org/hyperskill/calculator/tip/Stage1UnitTest.kt
+  visible: false
+- name: src/test/java/org/hyperskill/calculator/tip/Stage3UnitTest.kt
+  visible: false
