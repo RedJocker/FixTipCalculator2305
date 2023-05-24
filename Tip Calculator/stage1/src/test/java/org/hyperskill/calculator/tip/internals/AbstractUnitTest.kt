@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.SeekBar
 import org.junit.Assert.*
 import org.robolectric.Robolectric
 import org.robolectric.Shadows.shadowOf
@@ -15,7 +16,9 @@ import org.robolectric.shadows.ShadowAlertDialog
 import org.robolectric.shadows.ShadowLooper
 import org.robolectric.shadows.ShadowToast
 import java.time.Duration
+import java.util.concurrent.TimeUnit
 
+// Version 3.0
 abstract class AbstractUnitTest<T : Activity>(clazz: Class<T>) {
 
     /**
@@ -163,5 +166,34 @@ abstract class AbstractUnitTest<T : Activity>(clazz: Class<T>) {
         )
 
         return latestAlertDialog!!
+    }
+
+    /**
+     * Use this method to set the progress as a user.
+     *
+     * Will trigger attached listeners.
+     *
+     * First onStartTrackingTouch(), then onProgressChanged() as user, and finally onStopTrackingTouch()
+     */
+    fun SeekBar.setProgressAsUser(progress: Int) {
+        val shadowSeekBar = shadowOf(this)
+        assertNotNull("Expected seekbar to have a onSeekBarChangeListener", shadowSeekBar.onSeekBarChangeListener)
+
+        shadowSeekBar.onSeekBarChangeListener.onStartTrackingTouch(this)
+
+        // using java reflection to change progress without triggering listener
+        var clazz: Class<*> = this::class.java  // may be subclass of SeekBar
+        while(clazz.name != "android.widget.ProgressBar") {  // since SeekBar is a subclass of ProgressBar this should not be an infinite loop
+            clazz = clazz.superclass as Class<*>
+        }
+        val progressBarClazz = clazz
+        val progressField = progressBarClazz.getDeclaredField("mProgress")
+        progressField.isAccessible = true
+        progressField.setInt(this, progress)
+        //
+
+        shadowSeekBar.onSeekBarChangeListener.onProgressChanged(this, progress, true)
+        shadowSeekBar.onSeekBarChangeListener.onStopTrackingTouch(this)
+        shadowLooper.idleFor(500L, TimeUnit.MILLISECONDS)
     }
 }

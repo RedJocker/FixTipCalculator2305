@@ -18,18 +18,28 @@
 
 <ol>
 	<li>
-		<code>EditText</code> field where the user enters the bill value
-		with the <code>id</code> attribute <code>edit_text</code> and
-		the <code>inputType</code> attribute <code>numberDecimal</code>;
+		An <code>EditText</code> where users enter the bill value
+		with the <code>id</code> attribute <code>edit_text</code> ,
+		the <code>inputType</code> attribute <code>numberDecimal</code>
+		and <code>hint</code> attribute <code>"Insert Bill Value"</code>;
 	</li>
 	<li>
-		<code>Slider</code> widget for specifying the tip percentage
-		with the <code>id</code> attribute <code>slider</code>;
-		the values range from 0 to 100 with the step size 1;
+		A <code>SeekBar</code> widget for specifying the tip percentage
+		with the <code>id</code> attribute <code>seek_bar</code>.
+		Set the <code>max</code> attribute to 100
+		and the <code>progress</code> attribute to 15;
 	</li>
 	<li>
-		An empty <code>TextView</code> to later display the calculation result
-		with the <code>id</code> attribute <code>text_view</code>.
+		A <code>TextView</code> with id <code>bill_value_tv</code> that will be used to
+		display the bill value. Keep it empty on this stage;
+	</li>
+	<li>
+		A <code>TextView</code> with id <code>tip_percent_tv</code> that will be used to
+		display the tip percent. Keep it empty on this stage;
+	</li>
+	<li>
+		A <code>TextView</code> with id <code>result_tv</code>that will be used to
+		display the calculation result. Keep it empty on this stage;
 	</li>
 </ol>
 

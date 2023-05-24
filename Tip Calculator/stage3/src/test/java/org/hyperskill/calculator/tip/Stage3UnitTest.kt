@@ -1,194 +1,195 @@
 package org.hyperskill.calculator.tip
 
 import org.hyperskill.calculator.tip.internals.TipCalculatorUnitTest
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import org.hyperskill.calculator.tip.internals.screen.TipCalculatorScreen
+import org.hyperskill.calculator.tip.internals.screen.TipCalculatorScreen.Companion.idEditText
 import org.junit.FixMethodOrder
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
 import org.robolectric.RobolectricTestRunner
 
-// Version 2.0
+// Version 3.0
 @RunWith(RobolectricTestRunner::class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class Stage3UnitTest : TipCalculatorUnitTest<MainActivity>(MainActivity::class.java) {
 
-    companion object {
-        const val expectedTextTemplate = "Tip amount: %.2f$"
-    }
 
     @Test
-    fun test00_checkTipWithEmptyValue() {
+    fun test00_whenEditTextEmtpyThenTextViewsAreEmpty() {
         testActivity {
-            slider
-            textView
+            TipCalculatorScreen(this).apply {
+                setTipPercent(tipPercent = 20)
 
-            slider.value = 15f
-            advanceClockAndRun()
-
-            val messageTextNotEmptyError =
-                "View with id \"$idTextView\" should be empty when \"$idEditText\" is empty"
-            val isTextEmpty = textView.text.isNullOrEmpty()
-            assertTrue(messageTextNotEmptyError, isTextEmpty)
-        }
-    }
-
-    @Test
-    fun test01_checkValueWithInitialTip() {
-        testActivity {
-            editText
-            textView
-
-            val valueToTest = 50
-            editText.setText(valueToTest.toString())
-            advanceClockAndRun()
-            val tipToTest = 0
-
-            val messageTextError = "View with id \"$idTextView\" should contain formatted output"
-            val expectedValue = 0.00
-            val expectedText = expectedTextTemplate.format(expectedValue, tipToTest)
-            val actualText = textView.text.toString()
-            assertEquals(messageTextError, expectedText, actualText)
-        }
-    }
-
-    @Test
-    fun test02_checkBothValueAndTipWithSliderListenerLast() {
-        testActivity {
-            editText
-            textView
-            slider
-
-            val valueToTest = 201
-            editText.setText(valueToTest.toString())
-            advanceClockAndRun()
-            val tipToTest = 10
-            slider.value = tipToTest.toFloat()
-            advanceClockAndRun()
-
-            val messageTextError = "View with id \"$idTextView\" should contain formatted output"
-            val expectedValue = 20.10
-            val expectedText = expectedTextTemplate.format(expectedValue, tipToTest)
-            val actualText = textView.text
-            assertEquals(messageTextError, expectedText, actualText)
-        }
-    }
-
-    @Test
-    fun test03_checkEditTextListenerLast() {
-        testActivity {
-            editText
-            slider
-            textView
-
-            val tipToTest = 90
-            slider.value = tipToTest.toFloat()
-            advanceClockAndRun()
-            val valueToTest = 39
-            editText.setText(valueToTest.toString())
-            advanceClockAndRun()
-
-            val messageTextError = "View with id \"$idTextView\" should contain formatted output"
-            val expectedValue = 35.10
-            val expectedText = expectedTextTemplate.format(expectedValue, tipToTest)
-            val actualText = textView.text.toString()
-            assertEquals(messageTextError, expectedText, actualText)
-        }
-    }
-
-    @Test
-    fun test04_checkLargeValue() {
-        testActivity {
-            editText
-            textView
-            val messageLargeNumberTextError = "Make sure you give support for large numbers"
-
-            try {
-                val valueToTest = "100000000000000000"
-                editText.setText(valueToTest)
-                advanceClockAndRun()
-                val tipToTest = 90
-                slider.value = tipToTest.toFloat()
-                advanceClockAndRun()
-
-
-                val expectedValue = 90_000_000_000_000_000.00
-                val expectedText = expectedTextTemplate.format(expectedValue, tipToTest)
-                val actualText = textView.text.toString()
-                assertEquals(messageLargeNumberTextError, expectedText, actualText)
-            } catch (ex: Exception) {
-                throw AssertionError("Exception thrown ${ex.javaClass.simpleName}. $messageLargeNumberTextError", ex)
+                val caseDescription =  "\"$idEditText\" text is empty"
+                assertTipPercentIsEmpty(caseDescription)
+                assertBillValueIsEmpty(caseDescription)
+                asserTipAmountIsEmpty(caseDescription)
             }
         }
     }
 
     @Test
-    fun test05_checkDecimalValue() {
+    fun test01_whenEditTextIsZeroThenTipAndBillTextViewsAreEmpty() {
         testActivity {
-            editText
-            textView
+            TipCalculatorScreen(this).apply {
+                setBillAmount(billAmount = "0")
 
-            val valueToTest = "70.12"
-            editText.setText(valueToTest)
-            advanceClockAndRun()
-            val tipToTest = 10
-            slider.value = tipToTest.toFloat()
-            advanceClockAndRun()
-
-            val messageDecimalNumberTextError =
-                "Make sure you give support for numbers with decimal part"
-            val expectedValue = 7.01
-            val expectedText = expectedTextTemplate.format(expectedValue, tipToTest)
-            val actualText = textView.text.toString()
-            assertEquals(messageDecimalNumberTextError, expectedText, actualText)
+                val caseDescription = "\"$idEditText\" text is 0"
+                assertTipPercentIsEmpty(caseDescription)
+                assertBillValueIsEmpty(caseDescription)
+                asserTipAmountIsEmpty(caseDescription)
+            }
         }
     }
 
     @Test
-    fun test06_checkClearingValue() {
+    fun test02_checkValueWithInitialTip() {
         testActivity {
-            editText
-            textView
+            TipCalculatorScreen(this).apply {
+                val billValueToTest = 50
+                setBillAmount(billAmount = "$billValueToTest")
+                val tipToTest = 15
 
-            val valueNotEmpty = "100.10"
-            editText.setText(valueNotEmpty)
-            advanceClockAndRun()
-            val tipToTest = 10
-            slider.value = tipToTest.toFloat()
-            advanceClockAndRun()
-            val valueEmpty = ""
-            editText.setText(valueEmpty)
-            advanceClockAndRun()
-
-            val messageDecimalNumberTextError =
-                "View with id \"$idTextView\" should clear if \"$idEditText\" is empty"
-            val expectedText = ""
-            val actualText = textView.text.toString()
-            assertEquals(messageDecimalNumberTextError, expectedText, actualText)
+                val caseDescription = "initial tip value and $billValueToTest as bill amount"
+                assertTipPercent(caseDescription, tipToTest)
+                assertBillValue(caseDescription, billValueToTest.toBigDecimal())
+                assertTipAmount(caseDescription, "7.50")
+            }
         }
     }
 
     @Test
-    fun test07_check101TipsForValue100() {
+    fun test03_checkBothValueAndTipSetWithSeekBarSetLast() {
         testActivity {
-            editText
-            textView
+            TipCalculatorScreen(this).apply {
+                val billValueToTest = 201
+                setBillAmount(billAmount = "$billValueToTest")
 
-            val valueToTest = "100.00"
-            editText.setText(valueToTest)
-            advanceClockAndRun()
+                val tipToTest = 10
+                setTipPercent(tipPercent = tipToTest)
 
-            (0..100).forEach { tipToTest ->
-                slider.value = tipToTest.toFloat()
-                advanceClockAndRun()
+                val caseDescription = "first bill is set to $billValueToTest and then tip is set to $tipToTest"
+                assertTipPercent(caseDescription, tipToTest)
+                assertBillValue(caseDescription, billValueToTest.toBigDecimal())
+                assertTipAmount(caseDescription, "20.10")
+            }
+        }
+    }
 
-                val messageLongNumberTextError =
-                    "Make sure you give support for all 101 possible tip values. With tip value $tipToTest"
-                val expectedValue = tipToTest.toDouble()
-                val expectedText = expectedTextTemplate.format(expectedValue, tipToTest)
-                val actualText = textView.text.toString()
-                assertEquals(messageLongNumberTextError, expectedText, actualText)
+    @Test
+    fun test04_checkEditTextListenerLast() {
+        testActivity {
+            TipCalculatorScreen(this).apply {
+                val billValueToTest = 39
+                setBillAmount(billAmount = "$billValueToTest")
+
+                val tipToTest = 90
+                setTipPercent(tipPercent = tipToTest)
+
+                val caseDescription =
+                    "first tip is set to $tipToTest and then bill is set to $billValueToTest"
+                assertTipPercent(caseDescription, tipToTest)
+                assertBillValue(caseDescription, billValueToTest.toBigDecimal())
+                assertTipAmount(caseDescription, "35.10")
+            }
+        }
+    }
+
+    @Test
+    fun test05_checkLargeValue() {
+        testActivity {
+            TipCalculatorScreen(this).apply {
+                val messageLargeNumberTextError = "Make sure you give support for large numbers"
+
+                try {
+                    val billValueToTest = "100000000000000000000"
+                    setBillAmount(billAmount = billValueToTest)
+
+                    val tipToTest = 90
+                    setTipPercent(tipPercent = tipToTest)
+
+                    val caseDescription =
+                        "bill value is set to a large int value and tip is set to $tipToTest"
+                    assertTipPercent(caseDescription, tipToTest)
+                    assertBillValue(caseDescription, billValueToTest.toBigDecimal())
+                    assertTipAmount(caseDescription, "90000000000000000000.00")
+
+                } catch (ex: Exception) {
+                    throw AssertionError(
+                        "Exception thrown ${ex.javaClass.simpleName}. " +
+                                messageLargeNumberTextError, ex
+                    )
+                }
+            }
+        }
+    }
+
+    @Test
+    fun test06_checkDecimalValue() {
+        testActivity {
+            TipCalculatorScreen(this).apply {
+                val billValueToTest = "70.12"
+                setBillAmount(billAmount = billValueToTest)
+
+                val tipToTest = 50
+                setTipPercent(tipPercent = tipToTest)
+
+                val caseDescription =
+                    "bill value is set to a decimal number and tip is set to $tipToTest"
+                assertTipPercent(caseDescription, tipToTest)
+                assertBillValue(caseDescription, billValueToTest.toBigDecimal())
+                assertTipAmount(caseDescription, "35.06")
+            }
+        }
+    }
+
+    @Test
+    fun test07_checkClearingValue() {
+        testActivity {
+            TipCalculatorScreen(this).apply {
+                setBillAmount(billAmount = "10.10")
+                setBillAmount(billAmount = "")
+
+                val caseDescription = "\"$idEditText\" has been cleared"
+                assertTipPercentIsEmpty(caseDescription)
+                assertBillValueIsEmpty(caseDescription)
+                asserTipAmountIsEmpty(caseDescription)
+            }
+        }
+    }
+
+    @Test
+    fun test08_checkZeroingValue() {
+        testActivity {
+            TipCalculatorScreen(this).apply {
+                setBillAmount(billAmount = "10.10")
+                setBillAmount(billAmount = "0.0")
+
+                val caseDescription = "\"$idEditText\" has been zeroed"
+                assertTipPercentIsEmpty(caseDescription)
+                assertBillValueIsEmpty(caseDescription)
+                asserTipAmountIsEmpty(caseDescription)
+            }
+        }
+    }
+
+    @Test
+    fun test09_check101TipsForValue100() {
+        testActivity {
+            TipCalculatorScreen(this).apply {
+                val billValueToTest = "100"
+                setBillAmount(billAmount = billValueToTest)
+
+                (0..100).forEach { tipToTest ->
+                    setTipPercent(tipPercent = tipToTest)
+                    val caseDescription =
+                        "first bill is set to $billValueToTest and then tip is set to $tipToTest"
+
+                    assertTipPercent(caseDescription, tipToTest)
+                    assertBillValue(caseDescription, billValueToTest.toBigDecimal())
+                    assertTipAmount(caseDescription, "$tipToTest.00")
+                }
             }
         }
     }
