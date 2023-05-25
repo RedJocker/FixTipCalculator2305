@@ -3,24 +3,39 @@
 <p>
     You're almost there! In the final stage of the project,
     you need to take the user input data and perform the calculations.
-    To determine the tip amount, take the overall bill value,
-    multiply the number by the tip percentage, and divide it by 100.
-    Output the tip amount with two digits in the fraction part.
+    We are going to use the same event listeners from the previous stage
+    and now do some calculation with the input values to find out the tip amount
+    and display the result for the user of our tip calculator.
 </p>
 
 <h2>Objectives</h2>
 
-<p>
-    Using the event listeners from the previous stage,
-    update the tip calculation result in the <code>TextView</code> each time the user changes
-    the bill value or tip percentage.
-</p>
-
-<p>
-    Show the calculation result in the format 
-    <code>Tip amount: &lt;V&gt;$</code>, where<code>&lt;V&gt;</code> 
-    is the calculated tip amount formatted always with two decimals.
-</p>
+<ul>
+    <li>
+        If the value on <code>edit_text</code> is greater than zero
+        <ul>
+            <li>
+                Calculate the <code>tipAmount</code>, which will be
+                the result of multiplying the value on <code>edit_text</code>
+                with the value on <code>seek_bar</code> and dividing by 100;
+            </li>
+            <li>
+                Display the <code>tipAmount</code> result on <code>tip_amount_tv</code>
+                with the following format <code>Tip Amount: $[amount]</code>
+                where [amount] is a placeholder
+                for a number always displayed with two decimal places;
+            </li>
+        </ul>
+    </li>
+    <li>
+        If the value on <code>edit_text</code>
+        is either zero or empty then keep <code>tip_amount_tv</code> empty;
+    </li>
+    <li>
+        Make sure that the value on <code>tip_amount_tv</code> is updated
+        with changes on either <code>edit_text</code> or <code>seek_bar</code>;
+    </li>
+</ul>
 
 <h2>Example</h2>
 
