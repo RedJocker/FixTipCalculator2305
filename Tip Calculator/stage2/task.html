@@ -12,35 +12,35 @@
 <ul>
     <li>
         Add an event listener to <code>edit_text</code>.
-            <ul>
-                <li>
-                    If the value is greater than zero
-                    display the value on <code>bill_value_tv</code>
-                    with the following format:
-                    <code>Bill Value: $[amount]</code>, where [amount] is a placeholder
-                    for a number always displayed with two decimal places;
-                </li>
-                <li>
-                    Also if the value is greater than zero
-                    display the the current tip percent on <code>tip_percent_tv</code>
-                    with the following format:
-                    <code>Tip: [tipPercent]%</code>, where [tipPercent] is a placeholder
-                    for an integer number.
-                    The tip percent value should be equal to the <code>progress</code>
-                    attribute on <code>seek_bar</code>
-                </li>
-            </ul>
+        <ul>
+            <li>
+                If the value is greater than zero
+                display the value on <code>bill_value_tv</code>
+                with the following format:
+                <code>Bill Value: $[amount]</code>, where [amount] is a placeholder
+                for a number always displayed with two decimal places;
+            </li>
+            <li>
+                Also if the value is greater than zero
+                display the current tip percent on <code>tip_percent_tv</code>
+                with the following format:
+                <code>Tip: [tipPercent]%</code>, where [tipPercent] is a placeholder
+                for an integer number.
+                The tip percent value should be equal to the <code>progress</code>
+                attribute on <code>seek_bar</code>
+            </li>
+        </ul>
     </li>
 
     <li>
         Add an event listener to <code>seek_bar</code>
-            <ul>
-                <li>
-                    When the value of <code>progress</code> attribute changes
-                    update the value displayed at <code>tip_percent_tv</code>
-                    using the same format described above;
-                </li>
-            </ul>
+        <ul>
+            <li>
+                When the value of <code>progress</code> attribute changes
+                update the value displayed at <code>tip_percent_tv</code>
+                using the same format described above;
+            </li>
+        </ul>
     </li>
 
 </ul>
